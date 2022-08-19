@@ -52,6 +52,14 @@ class BlocCreateCommand extends Command {
     // print(argResults!['use-proto']);
     // print(argResults!['type']);
 
+    Directory currentDirectory = Directory.current;
+    File agilityConfigFile = File(path.join(currentDirectory.path, 'agility.yaml'));
+
+    if (!await agilityConfigFile.exists()) {
+      print('Not Agility project, please run in Agility project root directory.');
+      return;
+    }
+
     String? name = argResults!['name'];
 
     if (name == null || name.isEmpty) {
@@ -63,11 +71,13 @@ class BlocCreateCommand extends Command {
 
     String type = argResults!['type'];
 
+    String basePath = currentDirectory.path;
+
     String outputPath = name;
     if (type == 'business') {
-      outputPath = path.join('bloc', name);
+      outputPath = path.joinAll([basePath, 'packages', 'bloc', name]);
     } else {
-      outputPath = path.join('shared_bloc', name);
+      outputPath = path.joinAll([basePath, 'packages', 'shared_bloc', name]);
     }
 
     // await updateTemplateFromGithub();
